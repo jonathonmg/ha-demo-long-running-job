@@ -1,0 +1,31 @@
+pipeline {
+    agent {
+        kubernetes {
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: gcc
+    image: gcc:13.2.0
+    command:
+    - cat
+    tty: true
+'''
+        }
+    }
+    stages {
+        stage('Main') {
+            steps {
+                container("gcc"){
+                    script{
+                        for(int i=0;i<150;i++) {
+                            println(i)
+                            sleep 6
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
